@@ -82,8 +82,7 @@ export const content = {
             'What AI automation tools does he use?',
             'Can he build custom AI agents?',
         ],
-        apiEndpointPlaceholder: 'CHATBOT_API_ENDPOINT',
-        integrationNote: 'Chatbot logic will be connected later using n8n. Provide an outgoing webhook that accepts {message, sessionId} and returns {reply, metadata}. The UI must support streaming replies and a typing indicator; however, actual integration is external.',
+        apiEndpoint: 'https://wajid4.app.n8n.cloud/webhook/portfolio-chat',
     },
     contact: {
         intro: 'If you are interested in AI automation, agentic AI systems, or collaboration opportunities, feel free to reach out.',

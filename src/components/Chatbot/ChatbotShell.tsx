@@ -15,12 +15,21 @@ export const ChatbotShell: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [_sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { name, welcomeMessage, suggestedPrompts, apiEndpointPlaceholder, integrationNote } = content.chatbot;
+    // Session management with localStorage
+    const getSessionId = () => {
+        let sessionId = localStorage.getItem('portfolio_chat_session_id');
+        if (!sessionId) {
+            sessionId = `portfolio_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem('portfolio_chat_session_id', sessionId);
+        }
+        return sessionId;
+    };
+
+    const { name, welcomeMessage, suggestedPrompts, apiEndpoint } = content.chatbot;
 
     // Auto-scroll to bottom when messages change
     useEffect(() => {
@@ -49,11 +58,34 @@ export const ChatbotShell: React.FC = () => {
     }, [isOpen, messages.length, welcomeMessage]);
 
     const sendMessage = async (text: string) => {
-        if (!text.trim()) return;
+        const trimmedText = text.trim();
+
+        // Input validation
+        if (!trimmedText) return;
+        if (trimmedText.length < 2) {
+            const validationMessage: Message = {
+                id: `validation_${Date.now()}`,
+                text: 'Please enter at least 2 characters.',
+                sender: 'bot',
+                timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, validationMessage]);
+            return;
+        }
+        if (trimmedText.length > 500) {
+            const validationMessage: Message = {
+                id: `validation_${Date.now()}`,
+                text: 'Message is too long. Please keep it under 500 characters.',
+                sender: 'bot',
+                timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, validationMessage]);
+            return;
+        }
 
         const userMessage: Message = {
             id: `user_${Date.now()}`,
-            text: text.trim(),
+            text: trimmedText,
             sender: 'user',
             timestamp: new Date(),
         };
@@ -62,23 +94,57 @@ export const ChatbotShell: React.FC = () => {
         setInputValue('');
         setIsTyping(true);
 
-        // TODO: Replace this with actual n8n webhook call
-        // Example API call structure (currently simulated):
         try {
-            // const response = await fetch(apiEndpointPlaceholder, {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     message: text.trim(),
-            //     sessionId: sessionId,
-            //   }),
-            // });
-            // const data = await response.json();
-            // const botReply = data.reply;
+            const sessionId = getSessionId();
 
-            // SIMULATION: Replace with actual API call above
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            const botReply = `Thank you for your message: "${text.trim()}". This is a placeholder response. Connect this chatbot to n8n to enable real AI responses.`;
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    message: trimmedText,
+                    source: 'portfolio',
+                }),
+            });
+
+            // Debug: Log response details (temporary for debugging)
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Debug: Log the actual response data (temporary for debugging)
+            console.log('Response data:', data);
+
+            // Handle various possible response formats from n8n
+            let botReply = '';
+            if (typeof data === 'string') {
+                // Response is a plain string
+                botReply = data;
+            } else if (data.reply) {
+                // Response has a 'reply' field
+                botReply = data.reply;
+            } else if (data.message) {
+                // Response has a 'message' field
+                botReply = data.message;
+            } else if (data.response) {
+                // Response has a 'response' field
+                botReply = data.response;
+            } else if (data.output) {
+                // Response has an 'output' field
+                botReply = data.output;
+            } else {
+                // Fallback: stringify the whole response
+                botReply = JSON.stringify(data);
+            }
+
+            if (!botReply || botReply.trim() === '') {
+                botReply = 'No response received from the assistant.';
+            }
 
             const botMessage: Message = {
                 id: `bot_${Date.now()}`,
@@ -89,10 +155,9 @@ export const ChatbotShell: React.FC = () => {
 
             setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
-            console.error('Error sending message:', error);
             const errorMessage: Message = {
                 id: `error_${Date.now()}`,
-                text: 'Sorry, there was an error processing your message. Please try again.',
+                text: 'The assistant is temporarily unavailable. Please try again.',
                 sender: 'bot',
                 timestamp: new Date(),
             };
@@ -205,9 +270,10 @@ export const ChatbotShell: React.FC = () => {
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            placeholder="Type your message..."
+                            placeholder="Type your message (2-500 chars)..."
                             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-cyan-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                             disabled={isTyping}
+                            maxLength={500}
                         />
                         <button
                             type="submit"
@@ -217,17 +283,6 @@ export const ChatbotShell: React.FC = () => {
                         >
                             <Send className="w-5 h-5" />
                         </button>
-                    </div>
-
-                    {/* Integration Note for Developer */}
-                    <div className="mt-2">
-                        <details className="text-xs text-slate-500 dark:text-slate-400">
-                            <summary className="cursor-pointer hover:text-blue-600 dark:hover:text-cyan-400">Developer: n8n Integration Info</summary>
-                            <p className="mt-1 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-yellow-800 dark:text-yellow-200">
-                                <strong>API Endpoint:</strong> <code className="bg-yellow-100 dark:bg-yellow-900/40 px-1 rounded">{apiEndpointPlaceholder}</code><br />
-                                <strong>Note:</strong> {integrationNote}
-                            </p>
-                        </details>
                     </div>
                 </form>
             </Card>
