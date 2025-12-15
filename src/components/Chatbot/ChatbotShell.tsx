@@ -15,7 +15,7 @@ export const ChatbotShell: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+    const [_sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -155,8 +155,8 @@ export const ChatbotShell: React.FC = () => {
                         >
                             <div
                                 className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.sender === 'user'
-                                        ? 'bg-blue-600 dark:bg-cyan-600 text-white'
-                                        : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-gray-200 dark:border-gray-600'
+                                    ? 'bg-blue-600 dark:bg-cyan-600 text-white'
+                                    : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-gray-200 dark:border-gray-600'
                                     }`}
                             >
                                 <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>

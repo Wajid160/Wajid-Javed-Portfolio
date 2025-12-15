@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Header } from './components/Layout/Header';
 import { Footer } from './components/Layout/Footer';
 import { Hero } from './components/Sections/Hero';
@@ -9,8 +8,6 @@ import { Contact } from './components/Sections/Contact';
 import { ChatbotShell } from './components/Chatbot/ChatbotShell';
 
 function App() {
-    const [, setIsChatbotOpen] = useState(false);
-
     const handleOpenChatbot = () => {
         // Find and click the chatbot FAB button
         const chatbotButton = document.querySelector('[aria-label="Open chatbot"]') as HTMLButtonElement;
