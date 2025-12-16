@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { content } from '../../config/content';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { Card } from '../UI/Card';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     id: string;
@@ -15,21 +17,65 @@ export const ChatbotShell: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+    // Engaging loading messages that rotate
+    const loadingMessages = [
+        "Thinking...",
+        "Processing your question...",
+        "Consulting with AI...",
+        "Almost there...",
+        "Crafting a response...",
+    ];
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Session management with localStorage
+    // Session management with localStorage - unique per user/browser with 24-hour expiration
     const getSessionId = () => {
-        let sessionId = localStorage.getItem('portfolio_chat_session_id');
-        if (!sessionId) {
-            sessionId = `portfolio_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            localStorage.setItem('portfolio_chat_session_id', sessionId);
+        const SESSION_EXPIRY_HOURS = 24;
+        const sessionKey = 'portfolio_chat_session_id';
+        const timestampKey = 'portfolio_chat_session_timestamp';
+
+        const storedSessionId = localStorage.getItem(sessionKey);
+        const storedTimestamp = localStorage.getItem(timestampKey);
+
+        // Check if session expired (24 hours)
+        const now = Date.now();
+        const isExpired = storedTimestamp && (now - parseInt(storedTimestamp)) > (SESSION_EXPIRY_HOURS * 60 * 60 * 1000);
+
+        if (!storedSessionId || isExpired) {
+            // Create truly unique session ID with multiple entropy sources
+            const timestamp = Date.now();
+            const random1 = Math.random().toString(36).substring(2, 15);
+            const random2 = Math.random().toString(36).substring(2, 15);
+            const sessionId = `portfolio_${timestamp}_${random1}_${random2}`;
+
+            localStorage.setItem(sessionKey, sessionId);
+            localStorage.setItem(timestampKey, now.toString());
+
+            console.log('New session created:', sessionId);
+            return sessionId;
         }
-        return sessionId;
+
+        return storedSessionId;
     };
 
     const { name, welcomeMessage, suggestedPrompts, apiEndpoint } = content.chatbot;
+
+    // Rotate loading messages while typing
+    useEffect(() => {
+        if (isTyping) {
+            const interval = setInterval(() => {
+                setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+            }, 2000); // Change message every 2 seconds
+
+            return () => clearInterval(interval);
+        } else {
+            // Reset to first message when not typing
+            setLoadingMessageIndex(0);
+        }
+    }, [isTyping, loadingMessages.length]);
 
     // Auto-scroll to bottom when messages change
     useEffect(() => {
@@ -117,14 +163,21 @@ export const ChatbotShell: React.FC = () => {
 
             const data = await response.json();
 
-            // Debug: Log the actual response data (temporary for debugging)
-            console.log('Response data:', data);
+            // Debug: Log the actual response data
+            console.log('N8N Response data:', data);
+            console.log('Response type:', typeof data);
+            console.log('Is array:', Array.isArray(data));
 
-            // Handle various possible response formats from n8n
+            // Handle N8N response format: [{output: "..."}]
             let botReply = '';
+
             if (typeof data === 'string') {
                 // Response is a plain string
                 botReply = data;
+            } else if (Array.isArray(data) && data.length > 0) {
+                // N8N returns array format: [{output: "..."}]
+                const firstItem = data[0];
+                botReply = firstItem.output || firstItem.reply || firstItem.message || firstItem.response || JSON.stringify(firstItem);
             } else if (data.reply) {
                 // Response has a 'reply' field
                 botReply = data.reply;
@@ -139,12 +192,15 @@ export const ChatbotShell: React.FC = () => {
                 botReply = data.output;
             } else {
                 // Fallback: stringify the whole response
+                console.warn('Unknown response format, stringifying:', data);
                 botReply = JSON.stringify(data);
             }
 
             if (!botReply || botReply.trim() === '') {
                 botReply = 'No response received from the assistant.';
             }
+
+            console.log('Parsed bot reply:', botReply);
 
             const botMessage: Message = {
                 id: `bot_${Date.now()}`,
@@ -155,6 +211,14 @@ export const ChatbotShell: React.FC = () => {
 
             setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
+            // Enhanced error logging for debugging
+            console.error('Chatbot error:', error);
+            console.error('Error details:', {
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                timestamp: new Date().toISOString()
+            });
+
             const errorMessage: Message = {
                 id: `error_${Date.now()}`,
                 text: 'The assistant is temporarily unavailable. Please try again.',
@@ -224,7 +288,15 @@ export const ChatbotShell: React.FC = () => {
                                     : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-gray-200 dark:border-gray-600'
                                     }`}
                             >
-                                <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
+                                {message.sender === 'bot' ? (
+                                    <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-ul:my-2 prose-li:my-0 prose-p:my-1">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {message.text}
+                                        </ReactMarkdown>
+                                    </div>
+                                ) : (
+                                    <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
+                                )}
                                 <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'}`}>
                                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </p>
@@ -234,11 +306,16 @@ export const ChatbotShell: React.FC = () => {
 
                     {isTyping && (
                         <div className="flex justify-start">
-                            <div className="bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-600 rounded-2xl px-4 py-3">
-                                <div className="flex space-x-2">
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-600 border border-blue-200 dark:border-cyan-600 rounded-2xl px-5 py-3 shadow-sm">
+                                <div className="flex items-center space-x-3">
+                                    <div className="flex space-x-1">
+                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
+                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                                    </div>
+                                    <p className="text-sm text-blue-700 dark:text-cyan-300 font-medium animate-pulse">
+                                        {loadingMessages[loadingMessageIndex]}
+                                    </p>
                                 </div>
                             </div>
                         </div>
