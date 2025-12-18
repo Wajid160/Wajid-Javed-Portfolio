@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { content } from '../../config/content';
-import { Mail, Linkedin, Github, MessageCircle } from 'lucide-react';
+import { Mail, Linkedin, Github, MessageCircle, Check } from 'lucide-react';
 import { Card } from '../UI/Card';
 
 export const Contact: React.FC = () => {
     const { intro, responseExpectation, email, linkedin, github, whatsappList, whatsappLink } = content.contact;
+    const [emailCopied, setEmailCopied] = useState(false);
+
+    const handleCopyEmail = (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(email);
+        setEmailCopied(true);
+        setTimeout(() => setEmailCopied(false), 2000);
+    };
 
     const contactLinks = [
-        { icon: Mail, label: 'Email', value: email, href: `mailto:${email}` },
+        { icon: Mail, label: 'Email', value: email, href: '#', isAction: true },
         { icon: Linkedin, label: 'LinkedIn', value: 'Connect on LinkedIn', href: linkedin },
         { icon: Github, label: 'GitHub', value: 'View GitHub Profile', href: github },
         { icon: MessageCircle, label: 'WhatsApp', value: whatsappList, href: whatsappLink },
@@ -27,29 +35,47 @@ export const Contact: React.FC = () => {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                    {contactLinks.map(({ icon: Icon, label, value, href }) => (
-                        <a
-                            key={label}
-                            href={href}
-                            target={href.startsWith('http') ? '_blank' : undefined}
-                            rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                            className="group block"
-                        >
-                            <Card className="transition-all duration-200 hover:border-[#1E40AF] dark:hover:border-[#06B6D4]">
+                    {contactLinks.map(({ icon: Icon, label, value, href, isAction }) => {
+                        const content = (
+                            <Card className="transition-all duration-200 hover:border-[#1E40AF] dark:hover:border-[#06B6D4] cursor-pointer h-full">
                                 <div className="flex items-center space-x-4">
                                     <div className="flex-shrink-0 w-12 h-12 bg-[#1E40AF]/10 dark:bg-[#06B6D4]/10 rounded-lg flex items-center justify-center group-hover:bg-[#1E40AF]/20 dark:group-hover:bg-[#06B6D4]/20 transition-colors">
-                                        <Icon className="w-6 h-6 text-[#1E40AF] dark:text-[#06B6D4]" />
+                                        {isAction && emailCopied ? (
+                                            <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                        ) : (
+                                            <Icon className="w-6 h-6 text-[#1E40AF] dark:text-[#06B6D4]" />
+                                        )}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-[#374151] dark:text-[#D1D5DB] opacity-75">{label}</p>
                                         <p className="text-base font-semibold text-[#0F172A] dark:text-white truncate group-hover:text-[#1E40AF] dark:group-hover:text-[#06B6D4]">
-                                            {value}
+                                            {isAction && emailCopied ? 'Email Copied!' : value}
                                         </p>
                                     </div>
                                 </div>
                             </Card>
-                        </a>
-                    ))}
+                        );
+
+                        if (isAction) {
+                            return (
+                                <div key={label} onClick={handleCopyEmail} className="group block">
+                                    {content}
+                                </div>
+                            );
+                        }
+
+                        return (
+                            <a
+                                key={label}
+                                href={href}
+                                target={href.startsWith('http') ? '_blank' : undefined}
+                                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                className="group block"
+                            >
+                                {content}
+                            </a>
+                        );
+                    })}
                 </div>
             </div>
         </section>
