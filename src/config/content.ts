@@ -74,7 +74,7 @@ export const content = {
             'What AI automation tools does he use?',
             'Can he build custom AI agents?',
         ],
-        apiEndpoint: 'https://wajid4.app.n8n.cloud/webhook/portfolio-chat',
+        apiEndpoint: '/api/chat',
     },
     contact: {
         intro: 'If you are interested in AI automation, agentic AI systems, or collaboration opportunities, feel free to reach out.',
