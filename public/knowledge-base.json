@@ -1,0 +1,103 @@
+{
+    "profile": {
+        "name": "Wajid",
+        "title": "AI Systems Architect",
+        "positioning": "Independent AI Builder",
+        "location": "Pakistan",
+        "summary": "I am an Independent AI Systems Architect specializing in designing and building practical, business-ready AI agents and automation systems. I focus on creating revenue-impacting solutions such as customer support agents, Shopify automation, and multi-step AI workflows using n8n and modern agent frameworks. My work emphasizes clarity, reliability, and measurable business outcomes."
+    },
+    "education": [
+        {
+            "degree": "Bachelor of Science in Information Technology (BS IT)",
+            "status": "Graduate",
+            "focus": [
+                "Artificial Intelligence",
+                "Automation",
+                "Agentic AI Systems"
+            ]
+        }
+    ],
+    "skills": {
+        "core": [
+            "AI Systems Architecture",
+            "Agentic AI Design",
+            "AI Automation Strategy",
+            "Prompt Engineering",
+            "API-Oriented System Design"
+        ],
+        "tools": [
+            "n8n",
+            "OpenAI Agents SDK",
+            "REST APIs",
+            "Webhooks",
+            "JSON-Based Knowledge Systems"
+        ],
+        "domains": [
+            "Shopify Automation",
+            "Customer Support AI",
+            "Business Process Automation",
+            "No-Code / Low-Code AI Solutions"
+        ]
+    },
+    "experience": [
+        {
+            "role": "Independent AI Builder",
+            "description": "Designing, building, and deploying AI agents and automation systems for startups and online businesses, with a focus on reducing operational workload and improving response speed.",
+            "highlights": [
+                "Fixed-scope AI agent builds",
+                "Reusable automation architectures",
+                "Business-aligned AI decision logic"
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "AI WISMO Customer Support Agent",
+            "description": "An autonomous AI agent that handles 'Where Is My Order?' queries for Shopify stores by extracting order identifiers, validating inputs, querying Shopify APIs, and sending accurate customer responses.",
+            "stack": [
+                "n8n",
+                "OpenAI",
+                "Shopify API"
+            ],
+            "outcome": "Automates 40–60% of repetitive support tickets and significantly reduces response time."
+        },
+        {
+            "name": "Shopify Refund & Return Automation",
+            "description": "A policy-driven AI automation system that evaluates refund and return eligibility, calculates refunds, and processes Shopify refunds automatically based on store-defined rules.",
+            "stack": [
+                "n8n",
+                "Shopify API",
+                "AI Decision Logic"
+            ],
+            "outcome": "Removes manual refund handling and enforces consistent refund policies."
+        },
+        {
+            "name": "Portfolio AI Assistant Agent",
+            "description": "A friendly, startup-oriented AI assistant embedded in the portfolio website that answers client questions, explains services, showcases projects, and directs qualified leads to the Upwork profile.",
+            "stack": [
+                "OpenAI",
+                "JSON Knowledge Base",
+                "Web Integration"
+            ],
+            "outcome": "Acts as a 24/7 AI-powered sales and communication assistant."
+        }
+    ],
+    "services": [
+        {
+            "name": "Fixed-Price AI Agent Builds",
+            "description": "End-to-end design and delivery of custom AI agents with clearly defined scope, timeline, and outcomes."
+        },
+        {
+            "name": "Monthly Automation Retainers",
+            "description": "Ongoing automation development, optimization, and maintenance for growing businesses."
+        }
+    ],
+    "communication_style": {
+        "tone": "Friendly and startup-oriented",
+        "approach": "Clear, practical, and solution-focused without unnecessary technical jargon."
+    },
+    "contact": {
+        "primary_cta": "Upwork Profile",
+        "availability": "Open to freelance and long-term automation engagements"
+    }
+}
