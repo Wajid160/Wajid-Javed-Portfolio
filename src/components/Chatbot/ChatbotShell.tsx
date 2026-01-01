@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { content } from '../../config/content';
-import { MessageSquare, X, Send } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, Calendar, FileText, Zap } from 'lucide-react';
 import { Card } from '../UI/Card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -12,12 +12,20 @@ interface Message {
     timestamp: Date;
 }
 
+interface Feature {
+    icon: React.ReactNode;
+    label: string;
+    status: 'active' | 'coming-soon';
+    action?: () => void;
+}
+
 export const ChatbotShell: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+    const [showFeatures, setShowFeatures] = useState(false);
 
     // Engaging loading messages that rotate
     const loadingMessages = [
@@ -62,6 +70,34 @@ export const ChatbotShell: React.FC = () => {
     };
 
     const { name, welcomeMessage, suggestedPrompts, apiEndpoint } = content.chatbot;
+
+    // Features with status
+    const features: Feature[] = [
+        {
+            icon: <MessageSquare className="w-4 h-4" />,
+            label: 'AI Chat',
+            status: 'active',
+        },
+        {
+            icon: <Calendar className="w-4 h-4" />,
+            label: 'Book Meeting',
+            status: 'active',
+            action: () => {
+                setIsOpen(false);
+                document.getElementById('free-audit')?.scrollIntoView({ behavior: 'smooth' });
+            },
+        },
+        {
+            icon: <FileText className="w-4 h-4" />,
+            label: 'Get Quote',
+            status: 'coming-soon',
+        },
+        {
+            icon: <Zap className="w-4 h-4" />,
+            label: 'Quick Audit',
+            status: 'coming-soon',
+        },
+    ];
 
     // Rotate loading messages while typing
     useEffect(() => {
@@ -153,54 +189,35 @@ export const ChatbotShell: React.FC = () => {
                 }),
             });
 
-            // Debug: Log response details (temporary for debugging)
-            console.log('Response status:', response.status);
-            console.log('Response ok:', response.ok);
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
 
-            // Debug: Log the actual response data
-            console.log('N8N Response data:', data);
-            console.log('Response type:', typeof data);
-            console.log('Is array:', Array.isArray(data));
-
             // Handle N8N response format: [{output: "..."}]
             let botReply = '';
 
             if (typeof data === 'string') {
-                // Response is a plain string
                 botReply = data;
             } else if (Array.isArray(data) && data.length > 0) {
-                // N8N returns array format: [{output: "..."}]
                 const firstItem = data[0];
                 botReply = firstItem.output || firstItem.reply || firstItem.message || firstItem.response || JSON.stringify(firstItem);
             } else if (data.reply) {
-                // Response has a 'reply' field
                 botReply = data.reply;
             } else if (data.message) {
-                // Response has a 'message' field
                 botReply = data.message;
             } else if (data.response) {
-                // Response has a 'response' field
                 botReply = data.response;
             } else if (data.output) {
-                // Response has an 'output' field
                 botReply = data.output;
             } else {
-                // Fallback: stringify the whole response
-                console.warn('Unknown response format, stringifying:', data);
                 botReply = JSON.stringify(data);
             }
 
             if (!botReply || botReply.trim() === '') {
                 botReply = 'No response received from the assistant.';
             }
-
-            console.log('Parsed bot reply:', botReply);
 
             const botMessage: Message = {
                 id: `bot_${Date.now()}`,
@@ -211,13 +228,7 @@ export const ChatbotShell: React.FC = () => {
 
             setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
-            // Enhanced error logging for debugging
             console.error('Chatbot error:', error);
-            console.error('Error details:', {
-                message: error instanceof Error ? error.message : 'Unknown error',
-                stack: error instanceof Error ? error.stack : undefined,
-                timestamp: new Date().toISOString()
-            });
 
             const errorMessage: Message = {
                 id: `error_${Date.now()}`,
@@ -240,56 +251,98 @@ export const ChatbotShell: React.FC = () => {
         sendMessage(prompt);
     };
 
+    // Floating Action Button (Closed State)
     if (!isOpen) {
         return (
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 hover:bg-blue-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-cyan-300"
+                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-brand-accent hover:bg-brand-accent-dark text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-brand-accent/30 group"
                 aria-label="Open chatbot"
             >
-                <MessageSquare className="w-6 h-6" />
+                <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                {/* Pulse animation */}
+                <span className="absolute w-full h-full rounded-full bg-brand-accent animate-ping opacity-30"></span>
             </button>
         );
     }
 
     return (
         <div className="fixed bottom-6 right-6 z-50 w-full max-w-md">
-            <Card className="shadow-2xl ring-1 ring-black/5 flex flex-col h-[600px] max-h-[80vh]">
-                {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 bg-blue-600 dark:bg-cyan-600 text-white rounded-t-lg">
+            <Card className="shadow-2xl ring-1 ring-black/5 flex flex-col h-[700px] max-h-[85vh] overflow-hidden">
+                {/* Header - Brand Colors */}
+                <div className="flex items-center justify-between p-4 border-b border-brand-primary/10 bg-gradient-to-r from-brand-primary to-brand-primary-dark text-white">
                     <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                            <MessageSquare className="w-5 h-5" />
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <Sparkles className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-semibold">{name}</h3>
-                            <p className="text-xs text-white/80">AI Assistant</p>
+                            <h3 className="font-bold">{name}</h3>
+                            <p className="text-xs text-white/80">AI-Powered Assistant</p>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                        aria-label="Close chatbot"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {/* Features Toggle */}
+                        <button
+                            onClick={() => setShowFeatures(!showFeatures)}
+                            className={`p-2 rounded-lg transition-colors ${showFeatures ? 'bg-white/20' : 'hover:bg-white/10'}`}
+                            aria-label="Toggle features"
+                        >
+                            <Zap className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                            aria-label="Close chatbot"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
 
+                {/* Features Panel (Collapsible) */}
+                {showFeatures && (
+                    <div className="p-3 bg-light-bg dark:bg-dark-bg border-b border-light-border dark:border-dark-border">
+                        <div className="grid grid-cols-2 gap-2">
+                            {features.map((feature, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={feature.action}
+                                    disabled={feature.status === 'coming-soon'}
+                                    className={`flex items-center gap-2 p-2.5 rounded-lg text-sm font-medium transition-all ${feature.status === 'active'
+                                        ? 'bg-white dark:bg-dark-surface hover:bg-brand-accent/10 text-light-heading dark:text-dark-heading border border-light-border dark:border-dark-border hover:border-brand-accent'
+                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                                        }`}
+                                >
+                                    <span className={feature.status === 'active' ? 'text-brand-accent' : 'text-gray-400'}>
+                                        {feature.icon}
+                                    </span>
+                                    <span className="flex-1 text-left">{feature.label}</span>
+                                    {feature.status === 'coming-soon' && (
+                                        <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full font-medium">
+                                            Soon
+                                        </span>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-800">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-light-bg dark:bg-dark-bg">
                     {messages.map((message) => (
                         <div
                             key={message.id}
                             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div
-                                className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.sender === 'user'
-                                    ? 'bg-blue-600 dark:bg-cyan-600 text-white'
-                                    : 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white border border-gray-200 dark:border-gray-600'
+                                className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${message.sender === 'user'
+                                    ? 'bg-brand-primary text-white'
+                                    : 'bg-white dark:bg-dark-surface text-light-heading dark:text-dark-heading border border-light-border dark:border-dark-border shadow-sm'
                                     }`}
                             >
                                 {message.sender === 'bot' ? (
-                                    <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-ul:my-2 prose-li:my-0 prose-p:my-1">
+                                    <div className="text-sm prose prose-sm dark:prose-invert max-w-none prose-ul:my-2 prose-li:my-0 prose-p:my-1 prose-a:text-brand-accent">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                             {message.text}
                                         </ReactMarkdown>
@@ -297,7 +350,7 @@ export const ChatbotShell: React.FC = () => {
                                 ) : (
                                     <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
                                 )}
-                                <p className={`text-xs mt-1 ${message.sender === 'user' ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'}`}>
+                                <p className={`text-xs mt-1.5 ${message.sender === 'user' ? 'text-white/70' : 'text-light-muted dark:text-dark-muted'}`}>
                                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>
@@ -306,14 +359,14 @@ export const ChatbotShell: React.FC = () => {
 
                     {isTyping && (
                         <div className="flex justify-start">
-                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-600 border border-blue-200 dark:border-cyan-600 rounded-2xl px-5 py-3 shadow-sm">
+                            <div className="bg-white dark:bg-dark-surface border border-brand-accent/30 rounded-2xl px-5 py-3 shadow-sm">
                                 <div className="flex items-center space-x-3">
                                     <div className="flex space-x-1">
-                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-                                        <div className="w-2 h-2 bg-blue-500 dark:bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                     </div>
-                                    <p className="text-sm text-blue-700 dark:text-cyan-300 font-medium animate-pulse">
+                                    <p className="text-sm text-brand-accent font-medium">
                                         {loadingMessages[loadingMessageIndex]}
                                     </p>
                                 </div>
@@ -322,45 +375,50 @@ export const ChatbotShell: React.FC = () => {
                     )}
 
                     {messages.length === 1 && (
-                        <div className="space-y-2">
-                            <p className="text-xs text-slate-500 dark:text-slate-400 text-center">Try these questions:</p>
-                            {suggestedPrompts.map((prompt, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleSuggestedPrompt(prompt)}
-                                    className="w-full text-left px-4 py-2 text-sm bg-white dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-slate-600 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
-                                >
-                                    {prompt}
-                                </button>
-                            ))}
+                        <div className="space-y-2 mt-2">
+                            <p className="text-xs text-light-muted dark:text-dark-muted text-center font-medium">Quick questions:</p>
+                            <div className="space-y-2">
+                                {suggestedPrompts.map((prompt, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSuggestedPrompt(prompt)}
+                                        className="w-full text-left px-4 py-2.5 text-sm bg-white dark:bg-dark-surface hover:bg-brand-accent/5 border border-light-border dark:border-dark-border hover:border-brand-accent rounded-xl transition-all text-light-body dark:text-dark-body group"
+                                    >
+                                        <span className="group-hover:text-brand-accent transition-colors">{prompt}</span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
 
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input */}
-                <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900">
+                {/* Input - Improved */}
+                <form onSubmit={handleSubmit} className="p-4 border-t border-light-border dark:border-dark-border bg-white dark:bg-dark-surface">
                     <div className="flex space-x-2">
                         <input
                             ref={inputRef}
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            placeholder="Type your message (2-500 chars)..."
-                            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-cyan-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                            placeholder="Ask about our services..."
+                            className="flex-1 px-4 py-2.5 border border-light-border dark:border-dark-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-accent focus:border-brand-accent bg-light-bg dark:bg-dark-bg text-light-heading dark:text-dark-heading placeholder:text-light-muted dark:placeholder:text-dark-muted"
                             disabled={isTyping}
                             maxLength={500}
                         />
                         <button
                             type="submit"
                             disabled={!inputValue.trim() || isTyping}
-                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-cyan-600 dark:hover:bg-cyan-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-cyan-500"
+                            className="px-4 py-2.5 bg-brand-accent hover:bg-brand-accent-dark text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2"
                             aria-label="Send message"
                         >
                             <Send className="w-5 h-5" />
                         </button>
                     </div>
+                    <p className="text-[10px] text-light-muted dark:text-dark-muted mt-2 text-center">
+                        Powered by AI • {inputValue.length}/500 characters
+                    </p>
                 </form>
             </Card>
         </div>

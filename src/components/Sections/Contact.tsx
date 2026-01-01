@@ -1,81 +1,70 @@
 import React, { useState } from 'react';
 import { content } from '../../config/content';
 import { Mail, Linkedin, Github, MessageCircle, Check } from 'lucide-react';
-import { Card } from '../UI/Card';
 
 export const Contact: React.FC = () => {
-    const { intro, responseExpectation, email, linkedin, github, whatsappList, whatsappLink } = content.contact;
-    const [emailCopied, setEmailCopied] = useState(false);
+    const { email, linkedin, github, whatsappLink } = content.contact;
+    const [copied, setCopied] = useState(false);
 
-    const handleCopyEmail = (e: React.MouseEvent) => {
-        e.preventDefault();
-        navigator.clipboard.writeText(email);
-        setEmailCopied(true);
-        setTimeout(() => setEmailCopied(false), 2000);
+    const copyEmail = async () => {
+        try {
+            await navigator.clipboard.writeText(email);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy email:', err);
+        }
     };
 
-    const contactLinks = [
-        { icon: Mail, label: 'Email', value: email, href: '#', isAction: true },
-        { icon: Linkedin, label: 'LinkedIn', value: 'Connect on LinkedIn', href: linkedin },
-        { icon: Github, label: 'GitHub', value: 'View GitHub Profile', href: github },
-        { icon: MessageCircle, label: 'WhatsApp', value: whatsappList, href: whatsappLink },
+    const socialLinks = [
+        { icon: Linkedin, href: linkedin, label: 'LinkedIn' },
+        { icon: Github, href: github, label: 'GitHub' },
+        { icon: MessageCircle, href: whatsappLink, label: 'WhatsApp' },
     ];
 
     return (
-        <section id="contact" className="py-20 bg-white dark:bg-[#111827]">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-12 text-center">
-                    <h2 className="text-3xl font-bold text-[#0F172A] dark:text-white mb-4">Get in Touch</h2>
-                    <p className="text-lg text-[#374151] dark:text-[#D1D5DB] max-w-2xl mx-auto">
-                        {intro}
+        <section id="contact" className="py-16 bg-light-bg dark:bg-dark-bg">
+            <div className="section-container">
+                <div className="text-center">
+                    {/* Social Links */}
+                    <p className="text-light-body dark:text-dark-body mb-6">
+                        Connect with us
                     </p>
-                    <p className="text-sm text-[#374151] dark:text-[#D1D5DB] mt-2 opacity-75">
-                        {responseExpectation}
-                    </p>
-                </div>
+                    <div className="flex justify-center gap-4">
+                        {/* Email Button - Copy to clipboard */}
+                        <button
+                            onClick={copyEmail}
+                            className="relative p-4 rounded-xl bg-white dark:bg-dark-surface border border-light-border dark:border-dark-border text-light-body dark:text-dark-body hover:text-brand-accent hover:border-brand-accent transition-all duration-200 hover:-translate-y-1"
+                            aria-label="Copy email"
+                        >
+                            {copied ? (
+                                <Check className="w-6 h-6 text-brand-accent" />
+                            ) : (
+                                <Mail className="w-6 h-6" />
+                            )}
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                    {contactLinks.map(({ icon: Icon, label, value, href, isAction }) => {
-                        const content = (
-                            <Card className="transition-all duration-200 hover:border-[#1E40AF] dark:hover:border-[#06B6D4] cursor-pointer h-full">
-                                <div className="flex items-center space-x-4">
-                                    <div className="flex-shrink-0 w-12 h-12 bg-[#1E40AF]/10 dark:bg-[#06B6D4]/10 rounded-lg flex items-center justify-center group-hover:bg-[#1E40AF]/20 dark:group-hover:bg-[#06B6D4]/20 transition-colors">
-                                        {isAction && emailCopied ? (
-                                            <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
-                                        ) : (
-                                            <Icon className="w-6 h-6 text-[#1E40AF] dark:text-[#06B6D4]" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-[#374151] dark:text-[#D1D5DB] opacity-75">{label}</p>
-                                        <p className="text-base font-semibold text-[#0F172A] dark:text-white truncate group-hover:text-[#1E40AF] dark:group-hover:text-[#06B6D4]">
-                                            {isAction && emailCopied ? 'Email Copied!' : value}
-                                        </p>
-                                    </div>
+                            {/* Toast Notification */}
+                            {copied && (
+                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-brand-accent text-white text-xs font-medium rounded-lg whitespace-nowrap shadow-lg animate-fade-in-up">
+                                    Email copied!
                                 </div>
-                            </Card>
-                        );
+                            )}
+                        </button>
 
-                        if (isAction) {
-                            return (
-                                <div key={label} onClick={handleCopyEmail} className="group block">
-                                    {content}
-                                </div>
-                            );
-                        }
-
-                        return (
+                        {/* Other Social Links */}
+                        {socialLinks.map(({ icon: Icon, href, label }) => (
                             <a
                                 key={label}
                                 href={href}
-                                target={href.startsWith('http') ? '_blank' : undefined}
-                                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                className="group block"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-4 rounded-xl bg-white dark:bg-dark-surface border border-light-border dark:border-dark-border text-light-body dark:text-dark-body hover:text-brand-accent hover:border-brand-accent transition-all duration-200 hover:-translate-y-1"
+                                aria-label={label}
                             >
-                                {content}
+                                <Icon className="w-6 h-6" />
                             </a>
-                        );
-                    })}
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

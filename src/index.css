@@ -10,6 +10,52 @@
     body {
         @apply font-sans antialiased;
     }
+
+    /* Heading font */
+    h1, h2, h3 {
+        font-family: 'Outfit', 'Inter', sans-serif;
+    }
+}
+
+@layer components {
+    /* Primary CTA Button - Electric Green */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white rounded-xl transition-all duration-300;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Secondary CTA Button - Outline */
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-xl transition-all duration-200 border-2;
+        @apply border-brand-primary text-brand-primary dark:border-brand-primary-light dark:text-brand-primary-light;
+        @apply hover:bg-brand-primary hover:text-white dark:hover:bg-brand-primary-light dark:hover:text-dark-bg;
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+        @apply bg-white/80 dark:bg-dark-surface/80 backdrop-blur-lg rounded-2xl border border-light-border dark:border-dark-border;
+    }
+
+    /* Section Container */
+    .section-container {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    /* Section Title */
+    .section-title {
+        @apply text-3xl md:text-4xl font-bold text-light-heading dark:text-dark-heading mb-4;
+    }
+
+    /* Section Subtitle */
+    .section-subtitle {
+        @apply text-lg text-light-body dark:text-dark-body max-w-2xl mx-auto;
+    }
 }
 
 @layer utilities {
@@ -19,5 +65,42 @@
 
     .animation-delay-4000 {
         animation-delay: 4s;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        @apply bg-clip-text text-transparent;
+        background-image: linear-gradient(135deg, #1e3a8a 0%, #10b981 100%);
+    }
+
+    .gradient-text-green {
+        @apply bg-clip-text text-transparent;
+        background-image: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    }
+
+    /* Hero Gradient Background */
+    .hero-gradient {
+        background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 50%, #f9fafb 100%);
+    }
+
+    .dark .hero-gradient {
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    }
+
+    /* CTA Section Gradient */
+    .cta-gradient {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    }
+
+    /* Scroll reveal animation */
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .scroll-reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
