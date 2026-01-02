@@ -1,71 +1,68 @@
 import { Header } from './components/Layout/Header';
 import { Footer } from './components/Layout/Footer';
 import { Hero } from './components/Sections/Hero';
-import { SocialProof } from './components/Sections/SocialProof';
+import { Problem } from './components/Sections/Problem';
 import { HowItWorks } from './components/Sections/HowItWorks';
-import { Services } from './components/Sections/Services';
-import { FreeAuditCTA } from './components/Sections/FreeAuditCTA';
+import { SocialProof } from './components/Sections/SocialProof';
 import { CaseStudies } from './components/Sections/CaseStudies';
+import { Services } from './components/Sections/Services';
+import { WhyMe } from './components/Sections/WhyMe';
+import { FreeAuditCTA } from './components/Sections/FreeAuditCTA';
+import { FAQ } from './components/Sections/FAQ';
 import { About } from './components/Sections/About';
 import { Skills } from './components/Sections/Skills';
-import { FAQ } from './components/Sections/FAQ';
 import { Contact } from './components/Sections/Contact';
-import { ChatbotShell } from './components/Chatbot/ChatbotShell';
+import { QuickMessage } from './components/UI/QuickMessage';
 
 function App() {
-    const handleOpenChatbot = () => {
-        // Find and click the chatbot FAB button
-        const chatbotButton = document.querySelector('[aria-label="Open chatbot"]') as HTMLButtonElement;
-        if (chatbotButton) {
-            chatbotButton.click();
-        }
-    };
-
     return (
         <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300">
             <Header />
 
             <main>
-                {/* Hero - Above the fold with clear value prop */}
+                {/* 1. Hero - Above the fold with stats bar */}
                 <section id="home">
-                    <Hero onOpenChatbot={handleOpenChatbot} />
+                    <Hero />
                 </section>
 
-                {/* Social Proof - Build trust immediately */}
-                <SocialProof />
+                {/* 2. Problem - New section showing manual work pain points */}
+                <Problem />
 
-                {/* How It Works - Simple 3-step process */}
+                {/* 3. Solution - How It Works (4-step process) */}
                 <HowItWorks />
 
-                {/* Services & Pricing - Transparent pricing */}
-                <Services />
+                {/* 4. Social Proof - Testimonials with metrics */}
+                <SocialProof />
 
-                {/* First CTA - Primary conversion point */}
-                <FreeAuditCTA variant="primary" />
-
-                {/* Case Studies - Proof of results */}
+                {/* 5. Case Studies - Preview cards */}
                 <CaseStudies />
 
-                {/* About - Our story */}
-                <About />
+                {/* 6. Services & Pricing - With corrected pricing */}
+                <Services />
 
-                {/* Skills - Technical credibility (lower priority) */}
-                <Skills />
+                {/* 7. Why Me - New 4-column feature section */}
+                <WhyMe />
 
-                {/* FAQ - Address objections */}
+                {/* 8. Free Audit CTA - Primary conversion point */}
+                <FreeAuditCTA />
+
+                {/* 9. FAQ - Address objections */}
                 <FAQ />
 
-                {/* Second CTA - Another conversion opportunity */}
-                <FreeAuditCTA variant="secondary" />
+                {/* 10. About - Our story */}
+                <About />
 
-                {/* Contact - Social links */}
+                {/* 11. Skills - Technical credibility */}
+                <Skills />
+
+                {/* 12. Contact - Social links */}
                 <Contact />
             </main>
 
             <Footer />
 
-            {/* Chatbot always available */}
-            <ChatbotShell />
+            {/* Quick Message button instead of chatbot */}
+            <QuickMessage />
         </div>
     );
 }

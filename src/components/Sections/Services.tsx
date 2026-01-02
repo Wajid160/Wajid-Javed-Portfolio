@@ -1,9 +1,9 @@
 import React from 'react';
 import { content } from '../../config/content';
-import { Check, Star, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, Star, Sparkles, Info } from 'lucide-react';
 
 export const Services: React.FC = () => {
-    const { headline, subtitle, promoHeadline, promoSubtitle, spotsInfo, tiers, footnote, foundingClient } = content.services;
+    const { headline, promoHeadline, promoSubtitle, spotsInfo, tiers, footnote, monthlySupportNote } = content.services;
 
     const scrollToCalendly = () => {
         document.getElementById('free-audit')?.scrollIntoView({ behavior: 'smooth' });
@@ -15,7 +15,6 @@ export const Services: React.FC = () => {
                 {/* Section Header */}
                 <div className="text-center mb-8">
                     <h2 className="section-title">{headline}</h2>
-                    <p className="section-subtitle">{subtitle}</p>
                 </div>
 
                 {/* Promo Banner */}
@@ -30,7 +29,7 @@ export const Services: React.FC = () => {
                             {promoSubtitle}
                         </p>
                         <p className="text-sm text-brand-primary dark:text-brand-primary-light font-medium mt-2">
-                            Currently at {spotsInfo.filled}/{spotsInfo.total} spots filled
+                            {spotsInfo.filled} spots filled • {spotsInfo.total - spotsInfo.filled} remaining
                         </p>
                     </div>
                 </div>
@@ -63,7 +62,7 @@ export const Services: React.FC = () => {
 
                             {/* Price with strikethrough */}
                             <div className="mb-6">
-                                <div className="flex items-baseline gap-2">
+                                <div className="flex items-baseline gap-2 mb-1">
                                     <span className="text-lg text-light-muted dark:text-dark-muted line-through opacity-60">
                                         {tier.originalPrice}
                                     </span>
@@ -71,8 +70,8 @@ export const Services: React.FC = () => {
                                         {tier.price}
                                     </span>
                                 </div>
-                                <span className="text-xs text-brand-accent font-medium">
-                                    Save 20%
+                                <span className="text-sm text-brand-accent font-medium">
+                                    (Save {tier.savings})
                                 </span>
                             </div>
 
@@ -102,31 +101,20 @@ export const Services: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Footnote */}
-                <p className="text-center text-light-muted dark:text-dark-muted text-sm mb-8">
-                    {footnote}
-                </p>
-
-                {/* Founding Client Teaser */}
-                {foundingClient.enabled && (
-                    <div className="max-w-lg mx-auto">
-                        <div className="bg-brand-primary/5 dark:bg-brand-primary/10 border-2 border-dashed border-brand-primary/30 rounded-2xl p-6 text-center">
-                            <h4 className="text-xl font-bold text-brand-primary dark:text-brand-primary-light mb-2">
-                                {foundingClient.title}
-                            </h4>
-                            <p className="text-light-body dark:text-dark-body mb-4">
-                                {foundingClient.description}
-                            </p>
-                            <button
-                                onClick={scrollToCalendly}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-primary-dark transition-colors group"
-                            >
-                                {foundingClient.cta}
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </div>
+                {/* Footnotes */}
+                <div className="max-w-3xl mx-auto space-y-3">
+                    <div className="flex items-start gap-3 text-center justify-center">
+                        <p className="text-light-muted dark:text-dark-muted text-sm">
+                            {footnote}
+                        </p>
                     </div>
-                )}
+
+                    <div className="flex items-start gap-3 text-center justify-center">
+                        <p className="text-light-muted dark:text-dark-muted text-sm">
+                            {monthlySupportNote}
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     );

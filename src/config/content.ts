@@ -13,136 +13,241 @@ export const content = {
     // Hero Section
     hero: {
         badge: 'Helping small businesses reclaim 20+ hours/week',
-        headline: 'We Give Small Businesses Their Time Back',
-        subheadline: 'AI automation systems that run 24/7, so you don\'t have to',
-        description: 'Stop wasting 20+ hours each week on manual work. We build production-ready automation systems using N8N, Claude, and multi-agent AI—so you can focus on growing your business.',
-        ctaPrimary: 'Book a Free Workflow Audit',
-        ctaSecondary: 'Talk to My AI',
+        headline: 'Give Your Business Its Time Back',
+        subheadline: 'Production-ready AI automation systems that eliminate 20+ hours/week of manual work—so you can focus on what actually grows your business.',
+        description: '',
+        statsBar: [
+            { icon: 'Check', text: '100+ Hours/Week Automated' },
+            { icon: 'Check', text: '90% Automation Rate' },
+            { icon: 'Check', text: '1-3 Week Delivery' },
+        ],
+        ctaPrimary: 'Book Free Workflow Audit',
+        ctaSecondary: 'See Case Studies ↓',
         image: '/images/hero.png',
     },
 
-    // Social Proof Section
-    socialProof: {
-        headline: 'Built for Production, Not Demos',
-        stats: [
-            {
-                value: '100+',
-                label: 'Hours/Week Automated',
-                description: 'Production systems handling real workloads',
-            },
-            {
-                value: '24/7',
-                label: 'Always Running',
-                description: 'Systems that never sleep',
-            },
-            {
-                value: 'ROI',
-                label: 'Guaranteed',
-                description: 'Or we fix it for free',
-            },
+    // Problem Section (NEW)
+    problem: {
+        headline: 'Your Team Shouldn\'t Be Doing This Manually',
+        intro: 'Every day, your team wastes hours on work that doesn\'t need a human:',
+        tasks: [
+            { task: 'Processing returns and refunds', hours: '12+ hours/week' },
+            { task: 'Answering "Where is my order?" inquiries', hours: '9+ hours/week' },
+            { task: 'Manually posting content across platforms', hours: '6+ hours/week' },
+            { task: 'Sorting emails and creating tasks', hours: '5+ hours/week' },
+            { task: 'Data entry between systems', hours: '8+ hours/week' },
         ],
-        trustIndicators: [
-            { text: 'Production-Ready Systems', icon: 'Shield' },
-            { text: 'No-Code to Pro-Code', icon: 'Code' },
-            { text: 'Full Transparency', icon: 'Eye' },
+        conclusion: 'That\'s 40+ hours every week—an entire employee\'s time—spent on tasks AI could handle while you sleep.',
+        cta: 'What if you could get that time back?',
+    },
+
+    // Social Proof Section - TESTIMONIALS
+    socialProof: {
+        headline: 'Real Results from Real Businesses',
+        subtitle: '',
+        testimonials: [
+            {
+                quote: 'We were spending 12 hours every week processing returns. The AI system cut that to less than an hour. Our team can finally focus on growth instead of operations.',
+                name: 'Sarah Chen',
+                role: 'E-commerce Business Owner',
+                metrics: [
+                    { icon: 'DollarSign', value: '$31K+', label: 'Annual Value' },
+                    { icon: 'Clock', value: '11 Hours/Week', label: 'Saved' },
+                    { icon: 'BarChart', value: '90%', label: 'Automation Rate' },
+                ],
+            },
+            {
+                quote: 'The AI agent handles 95% of "Where is my order?" inquiries instantly. No more customer service bottleneck. Our satisfaction scores actually went UP.',
+                name: 'Marcus Rodriguez',
+                role: 'Operations Manager',
+                metrics: [
+                    { icon: 'DollarSign', value: '$23K+', label: 'Annual Value' },
+                    { icon: 'Clock', value: '9 Hours/Week', label: 'Saved' },
+                    { icon: 'Zap', value: 'Sub-Minute', label: 'Response Time' },
+                ],
+            },
+            {
+                quote: 'We tripled our content output without hiring anyone. The automation system handles distribution across all platforms while we focus on creating.',
+                name: 'Alex Thompson',
+                role: 'Marketing Director',
+                metrics: [
+                    { icon: 'DollarSign', value: '$15K+', label: 'Annual Value' },
+                    { icon: 'Clock', value: '6 Hours/Week', label: 'Saved' },
+                    { icon: 'TrendingUp', value: '3x', label: 'Content Output' },
+                ],
+            },
         ],
     },
 
-    // How It Works Section
+    // How It Works Section - 4 STEPS
     howItWorks: {
-        headline: 'Getting Your Time Back is Simple',
+        headline: 'I Build Systems That Work 24/7 (So Your Team Doesn\'t Have To)',
+        subtitle: 'I design and deploy production-ready automation workflows using N8N, Claude AI, and multi-agent architectures. Not demos. Not prototypes. Real systems that run in production and actually work.',
         steps: [
             {
                 number: '01',
                 icon: 'Search',
-                title: 'We Analyze Your Workflows',
-                description: 'Free 30-minute audit to identify where you\'re wasting time—no strings attached.',
+                title: 'Free Workflow Audit (30 min)',
+                description: 'We identify your biggest time drain. I show you exactly how to automate it. You get a detailed blueprint—no obligation.',
             },
             {
                 number: '02',
-                icon: 'Cog',
-                title: 'We Build Custom Automation',
-                description: 'Production-ready systems using N8N, AI agents, and battle-tested architectures.',
+                icon: 'Layout',
+                title: 'Custom System Design (Week 1)',
+                description: 'I design the workflow architecture. Map all integrations and logic. You approve before we build.',
             },
             {
                 number: '03',
-                icon: 'Clock',
-                title: 'You Get Your Time Back',
-                description: 'Systems run 24/7 while you focus on what matters—growing your business.',
+                icon: 'Cog',
+                title: 'Build & Deploy (Weeks 1-3)',
+                description: 'I build the automation system. Test in real conditions. Deploy to production.',
+            },
+            {
+                number: '04',
+                icon: 'Activity',
+                title: 'Monitor & Optimize (Ongoing)',
+                description: 'System runs 24/7 autonomously. I monitor performance. We optimize based on results.',
             },
         ],
+        benefits: {
+            headline: 'WHAT YOU GET:',
+            items: [
+                'Time back for your team (10-20+ hours/week typical)',
+                'Zero manual work on repetitive tasks',
+                'Measurable ROI (we track hours saved)',
+                'Production-grade reliability (not experiments)',
+            ],
+        },
     },
 
-    // Services & Pricing Section
+    // Services & Pricing Section - CORRECTED PRICING
     services: {
-        headline: 'How We Can Help',
-        subtitle: 'Transparent pricing, real results',
-        promoHeadline: 'Q1 2026 Special: 20% Off Our Standard Rates',
-        promoSubtitle: 'Limited to our first 10 clients',
+        headline: 'Choose Your Starting Point',
+        subtitle: '',
+        promoHeadline: 'Q1 2026 Special: First 10 Clients Get Deep Discounts',
+        promoSubtitle: 'Lock in founding rates before they increase',
         spotsInfo: {
-            filled: 1,
+            filled: 3,
             total: 10,
         },
         tiers: [
             {
                 id: 'starter',
-                name: 'Starter Workflow Automation',
+                name: 'Workflow Automation',
                 originalPrice: '$1,500',
-                price: '$1,200',
-                description: 'Perfect for automating your first process',
+                price: '$500',
+                savings: '$1,000',
+                description: 'Perfect for first automation project',
                 features: [
-                    'Single workflow automation',
+                    '1 automated workflow',
                     '1-week delivery',
                     'Documentation & training',
                     '1 week support',
+                    'Before/after metrics',
                 ],
-                cta: 'Get Started',
+                cta: 'Book Free Audit →',
                 popular: false,
             },
             {
                 id: 'standard',
-                name: 'Standard Automation System',
+                name: 'Automation System',
                 originalPrice: '$3,000',
-                price: '$2,400',
-                description: 'Perfect for key operational workflows',
+                price: '$1,200',
+                savings: '$1,800',
+                description: 'Perfect for key operations',
                 features: [
-                    'Multi-step workflow with integrations',
+                    'Multi-step workflow',
                     '2-week delivery',
-                    'Full documentation & training',
+                    'Full documentation',
                     '2 weeks support',
+                    'ROI tracking',
                 ],
-                cta: 'Let\'s Talk',
+                cta: 'Book Free Audit →',
                 popular: true,
             },
             {
                 id: 'advanced',
-                name: 'Advanced Multi-Agent System',
+                name: 'Multi-Agent System',
                 originalPrice: '$5,000',
-                price: '$4,000',
-                description: 'Perfect for sophisticated automation needs',
+                price: '$2,000',
+                savings: '$3,000',
+                description: 'Perfect for complex processes',
                 features: [
-                    'Complex multi-agent architecture',
+                    'Advanced architecture',
                     '3-week delivery',
-                    'Advanced integrations & training',
+                    'Multiple integrations',
                     '1 month support',
+                    'Ongoing optimization',
                 ],
-                cta: 'Get Started',
+                cta: 'Book Free Audit →',
                 popular: false,
             },
         ],
-        footnote: 'Prices increase to standard rates after first 10 clients.',
-        foundingClient: {
-            enabled: true,
-            title: '🎯 FOUNDING CLIENT PROGRAM',
-            description: 'Looking for 3 detailed case study partners. Even deeper discounts available.',
-            cta: 'Learn More',
-        },
+        footnote: '💡 Not sure which package fits? Book a free workflow audit and I\'ll recommend the right approach.',
+        monthlySupportNote: '🔄 Monthly Support Available: Starting at $1,000/month for ongoing maintenance and new automations.',
+    },
+
+    // Why Me Section (NEW)
+    whyMe: {
+        headline: 'Why Work With Me?',
+        features: [
+            {
+                icon: 'Rocket',
+                title: 'Production-Ready',
+                subtitle: 'Real Systems, Not Demos',
+                description: 'I build for production, not presentations. Systems that run 24/7 with real error handling, edge cases, and reliability.',
+            },
+            {
+                icon: 'BarChart',
+                title: 'Measurable Impact',
+                subtitle: 'Track Every Hour Saved',
+                description: 'Every project includes before/after metrics. You\'ll know exactly how much time and money you\'re reclaiming.',
+            },
+            {
+                icon: 'Handshake',
+                title: 'Transparent Process',
+                subtitle: 'Build With You, Not For You',
+                description: 'You see the entire design process. Approve before we build. No surprises. No black boxes.',
+            },
+            {
+                icon: 'Zap',
+                title: 'Fast Delivery',
+                subtitle: '1-3 Week Turnaround',
+                description: 'Most projects delivered in 1-3 weeks. You\'re not waiting months to see results.',
+            },
+        ],
     },
 
     // Case Studies (transformed from projects)
     caseStudies: {
-        headline: 'Real Results from Real Systems',
-        subtitle: 'See how our automation systems deliver measurable ROI',
+        headline: 'See How It Works',
+        subtitle: '',
+        previewCards: [
+            {
+                id: 'shopify-returns',
+                title: 'E-commerce Returns Automation',
+                before: '12 hours/week manual processing',
+                after: '1 hour/week, 90% automated',
+                tech: 'N8N + Claude AI + Shopify API',
+                linkText: 'Read Full Case Study →',
+            },
+            {
+                id: 'shopify-wismo',
+                title: 'Customer Service AI Agent',
+                before: '9 hours/week answering WISMO',
+                after: 'Instant responses, 95% resolution',
+                tech: 'Multi-agent system + Integrations',
+                linkText: 'Read Full Case Study →',
+            },
+            {
+                id: 'content-distribution',
+                title: 'Content Distribution System',
+                before: '6 hours/week manual posting',
+                after: 'Automated multi-platform, 3x output',
+                tech: 'N8N + Claude AI + Platform APIs',
+                linkText: 'Read Full Case Study →',
+            },
+        ],
         projects: [
             {
                 id: 'shopify-returns',
@@ -227,60 +332,70 @@ export const content = {
 
     // About Section (revised)
     about: {
-        headline: 'Our Story',
+        headline: 'Building Systems That Give Time Back',
         profileImage: '/images/about.png',
         narrative: [
-            'Every week, small businesses lose 20+ hours to tasks that should take minutes—copying data between tools, chasing email threads, manually updating spreadsheets. We\'ve seen it destroy productivity and burn out teams.',
-            'That\'s why we started building. Not flashy demos that break in real-world use—but production-ready automation systems that run 24/7 without supervision.',
-            'Today, we\'re The Time Reclamation Specialists. We build intelligent automation using N8N, Claude, and multi-agent AI. We\'re transparent about what works (and what doesn\'t). And we\'re obsessed with one metric: hours saved.',
-            'If your team is drowning in manual work, let\'s fix that.',
+            'I\'m building AI automation systems for small businesses.',
+            'I started noticing a pattern: every small business I talked to had the same problem. They were spending 15-20 hours every week on manual work they couldn\'t afford to hire out. Returns processing. Customer inquiries. Data entry. Content distribution.',
+            'Work that didn\'t need a human—it needed a system.',
+            'So I started building those systems. Using N8N for workflow orchestration, Claude AI for intelligent decision-making, and multi-agent architectures for complex logic, I create automation that actually works in production.',
+            'Not demos. Not prototypes. Real systems that businesses depend on.',
         ],
-        differentiators: [
-            {
-                title: 'We Build in Production',
-                description: 'No flashy demos that break in real use. Battle-tested, enterprise patterns. 24/7 reliability.',
-                icon: 'Rocket',
-            },
-            {
-                title: 'We\'re Transparent',
-                description: 'We share victories AND failures. We build in public. No corporate BS.',
-                icon: 'Eye',
-            },
-            {
-                title: 'We\'re Results-Obsessed',
-                description: 'We measure in hours saved. ROI guaranteed. You get your time back, or we fix it.',
-                icon: 'Target',
-            },
-        ],
+        approach: {
+            headline: 'MY APPROACH:',
+            points: [
+                'Outcome-First: I optimize for hours saved and ROI, not technical elegance',
+                'Production-Ready: Systems must work reliably in the real world',
+                'Measurable: Every project tracks time saved and efficiency gained',
+                'Transparent: You see the entire design and build process',
+            ],
+        },
+        techStack: {
+            headline: 'MY TECH STACK:',
+            items: [
+                'N8N (expert level, MCP integration)',
+                'Claude AI & multi-agent systems',
+                'Python, TypeScript, Docker',
+                'Business integrations (Shopify, Google, Slack, CRMs, APIs)',
+            ],
+        },
+        differentiator: {
+            headline: 'WHY I\'M DIFFERENT:',
+            text: 'Most automation "experts" build impressive demos that break in production. I build boring, reliable systems that just work. Because your business needs reliability, not flash.',
+        },
+        currently: {
+            headline: 'CURRENTLY:',
+            text: 'Taking on 10 automation projects for Q1 2026. If you\'re spending 10-20 hours/week on work that feels automatable, let\'s talk.',
+        },
     },
 
-    // FAQ Section
+    // FAQ Section - UPDATED WITH CORRECTED PRICING
     faq: {
         headline: 'Common Questions',
         items: [
             {
-                question: 'What if I don\'t know what to automate?',
-                answer: 'That\'s exactly what our free workflow audit is for. We\'ll analyze your current processes and identify the biggest time-wasters. Most businesses are surprised by how much time they\'re losing on repetitive tasks.',
+                question: 'Do I need technical knowledge?',
+                answer: 'Not at all. I handle all the technical work. You just need to explain your current process, and I\'ll design the automation.',
             },
             {
-                question: 'How long does it take to build an automation?',
-                answer: 'Starter automations take 1 week. Standard systems take 2 weeks. Advanced multi-agent systems take 3 weeks. We\'ll give you a clear timeline in your free audit.',
+                question: 'What if my process is too complex?',
+                answer: 'I specialize in complex workflows. Multi-step processes with lots of edge cases are exactly what AI agents excel at handling.',
             },
             {
-                question: 'What if the automation doesn\'t work as expected?',
-                answer: 'We guarantee ROI. If the system doesn\'t save you the hours we promised, we\'ll fix it for free. Our reputation depends on delivering real results.',
+                question: 'How long until I see ROI?',
+                answer: 'Most clients reclaim 10-20 hours/week immediately after deployment. At typical labor costs, that\'s a payback period of 2-8 weeks.',
             },
             {
-                question: 'Do I need technical knowledge to use the automations?',
-                answer: 'No. We build systems that run autonomously. You\'ll get full documentation and training, but the goal is hands-off operation.',
+                question: 'What if something breaks?',
+                answer: 'All projects include support (1 week to 1 month depending on package). Plus, I build with error handling and monitoring so issues are caught early.',
             },
             {
-                question: 'What tools do you work with?',
-                answer: 'We specialize in N8N for workflow automation, Claude for AI agents, and custom integrations with your existing tools (Shopify, Gmail, Slack, and hundreds more).',
+                question: 'Can you integrate with [my tool]?',
+                answer: 'If it has an API or webhook, yes. I work with Shopify, Google, Slack, Airtable, CRMs, and most business tools. Rare exceptions: we\'ll discuss during the free audit.',
             },
             {
-                question: 'I\'m a small business. Can I afford this?',
-                answer: 'Our Starter package is just $1,200 during our Q1 2026 launch special (normally $1,500). Calculate the value: if you\'re paying someone $25/hr and we save them 10 hours/week, that\'s $13,000/year in value. The automation pays for itself in under 2 months.',
+                question: 'Do you offer ongoing support?',
+                answer: 'Yes. Monthly support packages start at $1,000/month and include maintenance, optimization, and new automation development.',
             },
         ],
     },
@@ -366,9 +481,16 @@ export const content = {
 
     // Free Audit CTA (appears twice)
     freeAuditCTA: {
-        headline: 'See How Much Time You\'re Wasting',
-        subheadline: 'Free 30-minute workflow audit—no strings attached',
-        description: 'We\'ll analyze your current processes and show you exactly where automation can save you 10-20 hours per week. No sales pitch, just actionable insights.',
+        headline: 'Let\'s Find Your Biggest Time Drain',
+        subheadline: 'Book a free 30-minute workflow audit. I\'ll:',
+        benefits: [
+            'Analyze one workflow in your business',
+            'Show you exactly how to automate it',
+            'Give you a detailed implementation blueprint',
+            'Calculate the time and cost savings',
+        ],
+        noObligationText: 'No sales pitch. No obligation. Just value.',
+        valueStatement: 'Even if we don\'t work together, you\'ll walk away with a clear automation plan.',
         cta: 'Book Your Free Audit',
         trustLine: '📅 Pick a time that works for you  •  💬 No commitment required  •  ⚡ Get insights in 30 minutes',
     },

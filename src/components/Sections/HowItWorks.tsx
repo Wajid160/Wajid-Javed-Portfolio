@@ -1,73 +1,105 @@
 import React from 'react';
 import { content } from '../../config/content';
-import { Search, Cog, Clock, ArrowRight } from 'lucide-react';
+import { Search, Layout, Cog, Activity, Check, ArrowRight } from 'lucide-react';
 
-const iconMap: Record<string, React.FC<{ className?: string }>> = {
+const iconMap = {
     Search,
+    Layout,
     Cog,
-    Clock,
+    Activity,
 };
 
 export const HowItWorks: React.FC = () => {
-    const { headline, steps } = content.howItWorks;
+    const { headline, subtitle, steps, benefits } = content.howItWorks;
 
     const scrollToCalendly = () => {
         document.getElementById('free-audit')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
-        <section id="how-it-works" className="py-20 bg-light-bg dark:bg-dark-bg">
+        <section id="how-it-works" className="py-20 bg-white dark:bg-dark-bg">
             <div className="section-container">
                 {/* Section Header */}
-                <div className="text-center mb-16">
-                    <h2 className="section-title">{headline}</h2>
-                    <p className="section-subtitle">
-                        Three simple steps to automation that works
+                <div className="text-center mb-12">
+                    <h2 className="section-title mb-6">{headline}</h2>
+                    <p className="section-subtitle max-w-3xl mx-auto">
+                        {subtitle}
                     </p>
                 </div>
 
-                {/* Steps */}
-                <div className="relative">
-                    {/* Connection Line (desktop only) - positioned at icon level */}
-                    <div className="hidden md:block absolute top-8 left-1/2 w-2/3 h-0.5 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primary -translate-x-1/2 z-0"></div>
+                {/* 4-Step Process */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    {steps.map((step, index) => {
+                        const IconComponent = iconMap[step.icon as keyof typeof iconMap];
 
-                    <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-                        {steps.map((step, index) => {
-                            const IconComponent = iconMap[step.icon] || Search;
-                            return (
-                                <div key={index} className="relative text-center">
+                        return (
+                            <div
+                                key={index}
+                                className="relative"
+                            >
+                                {/* Connecting Line (desktop only) */}
+                                {index < steps.length - 1 && (
+                                    <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-brand-accent to-brand-primary opacity-20 -z-10" />
+                                )}
+
+                                {/* Step Card */}
+                                <div className="glass-card p-6 h-full hover:shadow-lg transition-shadow duration-300">
                                     {/* Step Number */}
-                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary dark:bg-brand-primary-light rounded-2xl mb-6 shadow-lg relative z-10">
-                                        <IconComponent className="w-8 h-8 text-white" />
+                                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-accent/10 mb-4">
+                                        <span className="text-2xl font-bold text-brand-accent">
+                                            {step.number}
+                                        </span>
                                     </div>
 
-                                    {/* Step Badge */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 bg-brand-accent text-white text-xs font-bold px-3 py-1 rounded-full">
-                                        Step {step.number}
+                                    {/* Icon */}
+                                    <div className="mb-4">
+                                        <IconComponent className="w-8 h-8 text-brand-primary dark:text-brand-primary-light" />
                                     </div>
 
-                                    {/* Content */}
-                                    <h3 className="text-xl font-bold text-light-heading dark:text-dark-heading mb-3">
+                                    {/* Title */}
+                                    <h3 className="text-lg font-bold text-light-heading dark:text-dark-heading mb-3">
                                         {step.title}
                                     </h3>
-                                    <p className="text-light-body dark:text-dark-body">
+
+                                    {/* Description */}
+                                    <p className="text-sm text-light-body dark:text-dark-body leading-relaxed">
                                         {step.description}
                                     </p>
                                 </div>
-                            );
-                        })}
-                    </div>
+                            </div>
+                        );
+                    })}
                 </div>
 
-                {/* CTA */}
-                <div className="text-center mt-12">
-                    <button
-                        onClick={scrollToCalendly}
-                        className="btn-primary group"
-                    >
-                        Start Your Free Audit
-                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                {/* What You Get Section */}
+                <div className="max-w-4xl mx-auto">
+                    <div className="glass-card p-8 bg-gradient-to-br from-brand-accent/5 to-brand-primary/5">
+                        <h3 className="text-2xl font-bold text-light-heading dark:text-dark-heading mb-6 text-center">
+                            {benefits.headline}
+                        </h3>
+
+                        <div className="grid md:grid-cols-2 gap-4 mb-8">
+                            {benefits.items.map((item, index) => (
+                                <div key={index} className="flex items-start gap-3">
+                                    <Check className="w-6 h-6 text-brand-accent flex-shrink-0 mt-0.5" />
+                                    <span className="text-light-body dark:text-dark-body">
+                                        {item}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* CTA Button */}
+                        <div className="text-center">
+                            <button
+                                onClick={scrollToCalendly}
+                                className="btn-primary group"
+                            >
+                                Book Your Free Workflow Audit
+                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

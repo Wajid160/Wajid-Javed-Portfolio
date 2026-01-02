@@ -1,16 +1,16 @@
 import React from 'react';
 import { content } from '../../config/content';
-import { ArrowRight, MessageSquare, Sparkles } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 
-interface HeroProps {
-    onOpenChatbot: () => void;
-}
-
-export const Hero: React.FC<HeroProps> = ({ onOpenChatbot }) => {
-    const { badge, headline, subheadline, description, ctaPrimary, ctaSecondary, image } = content.hero;
+export const Hero: React.FC = () => {
+    const { badge, headline, subheadline, statsBar, ctaPrimary, ctaSecondary, image } = content.hero;
 
     const scrollToCalendly = () => {
         document.getElementById('free-audit')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const scrollToCaseStudies = () => {
+        document.getElementById('case-studies')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
@@ -39,32 +39,42 @@ export const Hero: React.FC<HeroProps> = ({ onOpenChatbot }) => {
                         </h1>
 
                         {/* Subheadline */}
-                        <p className="text-xl sm:text-2xl font-medium text-brand-primary dark:text-brand-primary-light mb-4">
+                        <p className="text-lg sm:text-xl text-light-body dark:text-dark-body mb-6 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                             {subheadline}
                         </p>
 
-                        {/* Description */}
-                        <p className="text-lg text-light-body dark:text-dark-body mb-8 max-w-xl mx-auto lg:mx-0">
-                            {description}
-                        </p>
+                        {/* Stats Bar */}
+                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 mb-8 text-sm sm:text-base">
+                            {statsBar.map((stat, index) => (
+                                <React.Fragment key={index}>
+                                    <div className="flex items-center gap-2">
+                                        <Check className="w-5 h-5 text-brand-accent flex-shrink-0" />
+                                        <span className="font-medium text-light-heading dark:text-dark-heading">
+                                            {stat.text}
+                                        </span>
+                                    </div>
+                                    {index < statsBar.length - 1 && (
+                                        <span className="hidden sm:inline text-light-border dark:text-dark-border">|</span>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             {/* Primary CTA - BIG and prominent */}
                             <button
                                 onClick={scrollToCalendly}
-                                className="btn-primary group"
+                                className="btn-primary group text-base sm:text-lg"
                             >
                                 {ctaPrimary}
-                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                             </button>
 
                             {/* Secondary CTA */}
                             <button
-                                onClick={onOpenChatbot}
-                                className="btn-secondary"
+                                onClick={scrollToCaseStudies}
+                                className="btn-secondary inline-flex items-center justify-center"
                             >
-                                <MessageSquare className="mr-2 h-5 w-5" />
                                 {ctaSecondary}
                             </button>
                         </div>
