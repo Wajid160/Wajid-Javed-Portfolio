@@ -1,6 +1,6 @@
 import React from 'react';
 import { content } from '../../config/content';
-import { Check, Star, Sparkles, Info } from 'lucide-react';
+import { Check, Star, Sparkles } from 'lucide-react';
 
 export const Services: React.FC = () => {
     const { headline, promoHeadline, promoSubtitle, spotsInfo, tiers, footnote, monthlySupportNote } = content.services;
@@ -91,8 +91,8 @@ export const Services: React.FC = () => {
                             <button
                                 onClick={scrollToCalendly}
                                 className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${tier.popular
-                                        ? 'btn-primary'
-                                        : 'bg-light-bg dark:bg-dark-bg text-light-heading dark:text-dark-heading hover:bg-brand-accent hover:text-white'
+                                    ? 'btn-primary'
+                                    : 'bg-light-bg dark:bg-dark-bg text-light-heading dark:text-dark-heading hover:bg-brand-accent hover:text-white'
                                     }`}
                             >
                                 {tier.cta}
